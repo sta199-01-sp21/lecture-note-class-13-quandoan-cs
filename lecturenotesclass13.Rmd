@@ -389,20 +389,29 @@ Consider the mice radiation results. Suppose we want to compute a 90% confidence
 
 ```{r practice_2_bootstrap}
 boot_prop2 <- mice %>%
+  filter(treat == 1) %>%
+  mutate(died = if_else(died == 1, "yes", "no")) %>%
+  specify(response = died, success = "no") %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "prop")
 ```
 
 ```{r practice_2_ci}
-
+ci_mice_lived_treatment <- get_ci(boot_prop2, level = .90)
+ci_mice_lived_treatment
 ```
 
 Visualizing our Resuts:
 
 ```{r practice_2_visualize}
-
+visualize(boot_prop2) +
+  shade_ci(ci_mice_lived_treatment)
 ```
 
 
 Give an interpretation of your result.
+90% confident that the proportion of mice who lived while on the treatment are
+between 55.2% to 65.1%.
 
 
 # References
