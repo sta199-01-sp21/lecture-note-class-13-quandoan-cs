@@ -341,7 +341,11 @@ population *median* price of 1-bedroom apartments in Manhattan. Do this in a
 single code chunk with a single pipeline. Provide an interpretation of your result.
 
 ```{r practice_1}
-
+manhattan %>%
+  specify(response=rent) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "median") %>%
+  get_ci(level=0.95)
 ```
 
 ### A confidence interval for the population proportion - $p$
@@ -350,10 +354,10 @@ Consider the mice radiation dataset. Suppose we want to compute a 95% confidence
 
 First, identify the following:
 
-- Population: 
-- Parameter of interest:
-- Sample:
-- Sample size:
+- Population: Mice not on treatment
+- Parameter of interest: Proportion
+- Sample: Mice that died while not on treatment
+- Sample size: 261
 
 ```{r boot_mice}
 boot_prop <- mice %>% 
@@ -369,7 +373,8 @@ ci_mice_died <- get_ci(boot_prop, level = .95)
 ci_mice_died
 ```
 
-What does this mean?
+What does this mean? We are 95% confident that the proportion of mouse who died
+on the treatment is between 69% to 79.7%.
 
 **Interpretation**:
 
@@ -383,7 +388,7 @@ visualise(boot_prop) +
 Consider the mice radiation results. Suppose we want to compute a 90% confidence interval for the proportion of mice that lived while on the treatment, regardless of the dose.
 
 ```{r practice_2_bootstrap}
-
+boot_prop2 <- mice %>%
 ```
 
 ```{r practice_2_ci}
